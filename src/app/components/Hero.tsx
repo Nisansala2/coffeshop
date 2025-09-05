@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import Menu from './Menu';
+
 
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);

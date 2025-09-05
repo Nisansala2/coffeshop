@@ -1,0 +1,14 @@
+import mongoose, { Schema, model, models } from "mongoose";
+
+const MenuItemSchema = new Schema({
+  name: { type: String, required: true },
+  price: { type: String, required: true },
+  description: { type: String, required: true },
+  image: { type: String, required: true },
+  intensity: { type: Number, required: true },
+  popular: { type: Boolean, default: false },
+  category: { type: String, enum: ["hot", "cold"], required: true },
+});
+
+const MenuItem = models.MenuItem || model("MenuItem", MenuItemSchema);
+export default MenuItem;
