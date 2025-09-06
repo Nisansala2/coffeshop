@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "../../lib/mongodb";
-import MenuItem from "../../models/MenuItem";
+
 import Coffee from "../../models/Coffee";
 
 export async function GET() {
@@ -18,7 +18,7 @@ export async function POST(req: Request) {
   try {
     await connectDB();
     const data = await req.json();
-    const newItem = await MenuItem.create(data);
+    const newItem = await Coffee.create(data);
     return NextResponse.json(newItem);
   } catch (error) {
     console.error("Error creating menu item:", error);
