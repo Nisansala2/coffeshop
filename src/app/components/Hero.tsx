@@ -6,8 +6,14 @@ import React, { useState, useEffect } from 'react';
 export default function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
   const [showMenu, setShowMenu] = useState(false);
+  const [coffeeBeans, setCoffeeBeans] = useState<Array<{
+    id: number;
+    left: string;
+    top: string;
+    animationDelay: string;
+    animationDuration: string;
+  }>>([]);
   
   const coffeeImages = [
     'https://images.unsplash.com/photo-1447933601403-0c6688de566e?w=1920&h=1080&fit=crop&crop=center',
@@ -20,6 +26,17 @@ export default function Hero() {
     const interval = setInterval(() => {
       setCurrentImageIndex((prev) => (prev + 1) % coffeeImages.length);
     }, 5000);
+
+    // Generate coffee beans data only on client side
+    const beans = [...Array(12)].map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      animationDelay: `${Math.random() * 5}s`,
+      animationDuration: `${4 + Math.random() * 4}s`
+    }));
+    setCoffeeBeans(beans);
+
     return () => clearInterval(interval);
   }, []);
 
@@ -42,15 +59,15 @@ export default function Hero() {
 
       {/* Floating Coffee Beans Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
+        {coffeeBeans.map((bean) => (
           <div
-            key={i}
-            className="absolute w-2 h-3 bg-amber-800 rounded-full opacity-20 animate-float"
+            key={bean.id}
+            className="absolute w-2 h-3 rounded-full bg-amber-800 opacity-20 animate-float"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${4 + Math.random() * 4}s`
+              left: bean.left,
+              top: bean.top,
+              animationDelay: bean.animationDelay,
+              animationDuration: bean.animationDuration
             }}
           />
         ))}
@@ -58,22 +75,22 @@ export default function Hero() {
 
       {/* Main Content */}
       <div className="relative z-10 flex items-center justify-center min-h-screen px-4">
-        <div className="text-center max-w-4xl mx-auto">
+        <div className="max-w-4xl mx-auto text-center">
           {/* Main Title */}
           <h1 className={`text-6xl md:text-8xl font-black mb-6 transition-all duration-1500 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}>
-            <span className="bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+            <span className="text-transparent bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text">
               BREW
             </span>
-            <span className="text-white ml-4">BLISS</span>
+            <span className="ml-4 text-white">BLISS</span>
           </h1>
 
           {/* Subtitle */}
           <p className={`text-xl md:text-2xl text-gray-200 mb-8 font-light leading-relaxed transition-all duration-1500 delay-300 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}>
-            Where every cup tells a story of <span className="text-amber-400 font-semibold">perfection</span>
+            Where every cup tells a story of <span className="font-semibold text-amber-400">perfection</span>
           </p>
 
           {/* Feature Pills */}
@@ -83,7 +100,7 @@ export default function Hero() {
             {['Artisan Roasted', 'Locally Sourced', 'Premium Quality'].map((feature, index) => (
               <span
                 key={feature}
-                className="px-6 py-2 bg-white/20 backdrop-blur-md rounded-full text-white border border-white/30 hover:bg-white/30 transition-all duration-300 cursor-default"
+                className="px-6 py-2 text-white transition-all duration-300 border rounded-full cursor-default bg-white/20 backdrop-blur-md border-white/30 hover:bg-white/30"
               >
                 {feature}
               </span>
@@ -94,17 +111,17 @@ export default function Hero() {
           <div className={`flex flex-col sm:flex-row gap-4 justify-center items-center transition-all duration-1500 delay-700 ${
             isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
           }`}>
-            <button className="group px-8 py-4 bg-gradient-to-r from-amber-500 to-orange-600 text-white font-bold rounded-full hover:from-amber-600 hover:to-orange-700 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-amber-500/25"
+            <button className="px-8 py-4 font-bold text-white transition-all duration-300 transform rounded-full shadow-2xl group bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 hover:scale-105 hover:shadow-amber-500/25"
               onClick={() => setShowMenu(true)}>
               <span className="flex items-center gap-2">
                 Order Now
-                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
               </span>
             </button>
             
-            <button className="group px-8 py-4 bg-transparent text-white font-bold rounded-full border-2 border-white/50 hover:bg-white hover:text-gray-900 transition-all duration-300 backdrop-blur-sm">
+            <button className="px-8 py-4 font-bold text-white transition-all duration-300 bg-transparent border-2 rounded-full group border-white/50 hover:bg-white hover:text-gray-900 backdrop-blur-sm">
               <span className="flex items-center gap-2">
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.5a1.5 1.5 0 011.5 1.5v1a1.5 1.5 0 01-1.5 1.5H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -124,8 +141,8 @@ export default function Hero() {
               { number: '24/7', label: 'Always Fresh' }
             ].map((stat) => (
               <div key={stat.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-black text-amber-400 mb-2">{stat.number}</div>
-                <div className="text-sm text-gray-300 font-medium">{stat.label}</div>
+                <div className="mb-2 text-3xl font-black md:text-4xl text-amber-400">{stat.number}</div>
+                <div className="text-sm font-medium text-gray-300">{stat.label}</div>
               </div>
             ))}
           </div>
@@ -133,9 +150,9 @@ export default function Hero() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-        <div className="w-6 h-10 border-2 border-white/50 rounded-full flex justify-center">
-          <div className="w-1 h-3 bg-white/70 rounded-full mt-2 animate-pulse" />
+      <div className="absolute transform -translate-x-1/2 bottom-8 left-1/2 animate-bounce">
+        <div className="flex justify-center w-6 h-10 border-2 rounded-full border-white/50">
+          <div className="w-1 h-3 mt-2 rounded-full bg-white/70 animate-pulse" />
         </div>
       </div>
 
